@@ -1,0 +1,10 @@
+streamlit
+pytz
+tzlocal
+pycurl
+apscheduler
+croniter
+openpyxl
+azure.identity
+requests
+pandas
