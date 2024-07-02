@@ -26,7 +26,7 @@ def get_image_data():
         CAST(ROUND(AVG(output_tokens), 0) AS INTEGER) AS '输出Tokens',
         output_content_length as '输出内容长度',
         ROUND(AVG(total_time), 4) AS '总时间',
-        ROUND(AVG(pretransfer_time), 4) AS '首Token时间',
+        ROUND(AVG(starttransfer_time), 4) AS '首Token时间',
         ROUND(AVG(namelookup_time), 4) AS 'DNS解析时间',
         ROUND(AVG(connect_time), 4) AS 'TCP建立时间'
     FROM   
@@ -59,7 +59,7 @@ def get_text_data():
         CAST(ROUND(AVG(output_tokens), 0) AS INTEGER) AS '输出Tokens',
         output_content_length as '输出内容长度',
         ROUND(AVG(total_time), 4) AS '总时间',
-        ROUND(AVG(pretransfer_time), 4) AS '首Token时间',
+        ROUND(AVG(starttransfer_time), 4) AS '首Token时间',
         ROUND(AVG(namelookup_time), 4) AS 'DNS解析时间',
         ROUND(AVG(connect_time), 4) AS 'TCP建立时间'
     FROM   
