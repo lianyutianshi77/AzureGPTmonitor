@@ -180,6 +180,9 @@ def process_image_resource():
         }
         """
 
+    sys_msg = ""
+    user_msg = ""
+
     def process_single_gpt4(gpt4):
         length = 0
         resource_key = gpt4["resource_key"]
@@ -196,20 +199,26 @@ def process_image_resource():
             try:  
                 response = requests.get(img, timeout=10)  # 设置超时时间，防止请求挂起  
                 if response.status_code == 200:  
-                    print(f"Image {img} found successfully.")  
-                else:  
-                    print(f"Image {img} not found, status code: {response.status_code}. Please check the URL.")  
-                    sys.exit(2)  
-            except requests.exceptions.RequestException as e:  
-                print(f"An error occurred while trying to fetch the image {img}: {e}")  
-                sys.exit(2)
-
-            user_msg = [
+                    print(f"Image {img} found successfully.")
+                    user_msg = [
                         {"type": "text", "text": "提取文本："},
                         {"type": "image_url",
                             "image_url": {"url" : img}
                         }
                     ]
+                    sys_msg = """你是一个名片识别助手，用来提取用户上传的名片照片上的信息；
+你需要提取如下项目，并使用Json格式返回。
+{
+"公司名称": string,
+"姓名": string,
+"职位": String
+}
+"""
+                else:  
+                    print(f"Image {img} not found, status code: {response.status_code}. Please check the URL.")  
+            except requests.exceptions.RequestException as e:  
+                print(f"An error occurred while trying to fetch the image {img}: {e}")  
+
             res = gpt_request(sys_msg, gpt4["resource_name"], key , gpt4["deployment_name"], user_msg)
             res["input_content_length"] = len(sys_msg) + len(json.dumps(user_msg))
             res["region"] = gpt4["region"]
@@ -236,7 +245,7 @@ def process_image_resource():
 
     end_time = time.time()
     print(f"Image data inserted done at {time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(end_time))}, elapsed time: {round(end_time - start_time, 4)} seconds --------------------------------")
-
+    
 def process_text_resource():
     start_time = time.time()
     print(f"Begin request text at {time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(start_time))} ------------------------------------------------")
