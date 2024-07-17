@@ -186,11 +186,16 @@ def process_image_resource():
     def process_single_gpt4(gpt4):
         length = 0
         resource_key = gpt4["resource_key"]
+        key = resource_key
+        
         try:
-            if resource_key.startswith("b'"):
-                resource_key = resource_key[2:-1]
-            key = base64.b64decode(resource_key).decode("utf-8")
+            if isinstance(resource_key, bytes):
+                key = base64.b64decode(resource_key).decode("utf-8")
+            elif isinstance(resource_key, str) and resource_key.startswith("b'"):
+                resource_key = resource_key.replace("b'", "").replace("'", "")
+                key = base64.b64decode(resource_key).decode("utf-8")
         except Exception as e:
+            print(f"key is error: {e}")
             key = resource_key
 
         for index, img in enumerate(images[:]):
@@ -262,12 +267,18 @@ def process_text_resource():
     def process_single_gpt4(gpt4):
         length = 0
         resource_key = gpt4["resource_key"]
+        key = resource_key
+        
         try:
-            if resource_key.startswith("b'"):
+            if isinstance(resource_key, bytes):
+                key = base64.b64decode(resource_key).decode("utf-8")
+            elif isinstance(resource_key, str) and resource_key.startswith("b'"):
                 resource_key = resource_key.replace("b'", "").replace("'", "")
-            key = base64.b64decode(resource_key).decode("utf-8")
+                key = base64.b64decode(resource_key).decode("utf-8")
         except Exception as e:
+            print(f"key is error: {e}")
             key = resource_key
+            
         for index, text in enumerate(questions):
             user_msg = text
             res = gpt_request(sys_msg, gpt4["resource_name"], key, gpt4["deployment_name"], user_msg)
