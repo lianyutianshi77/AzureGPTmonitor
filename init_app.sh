@@ -31,4 +31,7 @@ fi
 echo "获取Azure OpenAI Gpt 资源列表 ... "
 python utils/fetch_all_aoai_resources.py
 echo "将Azure OpenAI Gpt资源信息入库 ... "
+# 若要从文件中读取配置，可不执行，将 utils/gpt_request.py 文件的 168 行和 251 行 的 'db' 改为 'file'
 python utils/insert_gpt_resources_to_db.py
+
+echo "# 修改图片的链接，可访问的图片的url, utils/gpt_request.py 的 171 行的 images = []"
